@@ -35,20 +35,24 @@
   var Win = $(window)
   var Doc = $(document)
 
-  var initFonSize = Utli.StorageGetter('font_size')
+// var initFonSize = 14
   // 页面初始化时从localStorage中读取字体大小，如果没有设为14
+
+
   var setFont = function(){
-
+    let initFonSize = Utli.StorageGetter('font_size')
     if(!initFonSize){
-      var initFonSize = 14
+      let  initFonSize = 14
     }
-    var initFonSize = parseInt(initFonSize)
+    log('字体大小', initFonSize)
+    let initFonSize = parseInt(initFonSize)
+    log('字体大小', typeof(initFonSize),initFonSize)
+
     //设置字体大小
-    log('字体大小', Utli.StorageGetter('font_size'))
     Dom.content_size.css('font-size', initFonSize)
-
+    return initFonSize
   }
-
+    setFont()
   //2.实现和阅读器相关的数据交互的方法
   function ReaderModel(){
 
@@ -122,12 +126,12 @@
 
     //6.切换字体和字号，保存信息到localStorage
     $('.font_size .large').click(function(){
-      log('debug 6,增大字体')
-      log('debug 6 ', initFonSize)
+
+      log('debug 6 增大字体 ', initFonSize)
       if(initFonSize >=  20){
         return
       }
-      initFonSize += 1
+      let initFonSize = initFonSize+1
       Dom.content_size.css('font-size', initFonSize)
       // 保存字号信息
       Utli.StorageSetter('font_size', initFonSize)
@@ -137,7 +141,8 @@
       if(initFonSize <= 12){
         return
       }
-      initFonSize -= 1
+      let initFonSize = initFonSize - 1
+      log('debug 6 ', initFonSize)
       Dom.content_size.css('font-size', initFonSize)
       Utli.StorageSetter('font_size', initFonSize)
     })
@@ -149,9 +154,15 @@
 
   // 5.整个项目的入口
   function main(){
-    setFont()
+
     EventBind()
   }
 
   main()
 }) ()
+var a =1
+var w  =function(element){
+  var a = String(elem)
+  console.log(a,typeof(a))
+}
+w()

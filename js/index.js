@@ -35,16 +35,35 @@
   var Win = $(window)
   var Doc = $(document)
 
-  // 页面初始化时从localStorage中读取字体大小，如果没有设为14
+  // 5.页面初始化时从localStorage中读取字体大小，如果没有设为14,
+  //这里需要一个全局变量，并且在点击增大减小按钮时都要修改其值
   var initFonSize = Utli.StorageGetter('font_size')
   if(!initFonSize){
-    var initFonSize = 14
+    initFonSize = 14
   }
-  var initFonSize = parseInt(initFonSize)
+  initFonSize = parseInt(initFonSize)
   //设置字体大小
   log('字体大小', Utli.StorageGetter('font_size'))
   Dom.content_size.css('font-size', initFonSize)
 
+  // 6.页面初始化时要从localStorage中读取背景颜色信息
+  var container_id = Utli.StorageGetter('bk_id')
+  var bk_container = w('.background')
+  log(container_id)
+  if(container_id){
+    var id = container_id.slice(-1)
+    bk_container.dataset.active = id
+    var click_bk = $(`#${container_id}`).css('background')
+    $('.fiction.content').css('background', click_bk)
+
+    //q切换背景时，给当前背景加小圆圈，并清除之前的小圆圈
+    removeClassAll('bk_container_current')
+    var selector = `#${container_id}`+'>div'
+    log(selector)
+    var div = w(selector)
+    div.classList.add('bk_container_current')
+  }
+    contaienr_id = 'bk_container_0'
   //2.实现和阅读器相关的数据交互的方法
   function ReaderModel(){
 
@@ -100,15 +119,12 @@
       }
     })
 
-    //3.切换夜间模式
-    $('#night_day').click(function(){
-      // todo 触发背景切换
-    })
-    //4. 唤出目录
+    //3. 唤出目录
     $('.catalog').click(function(){
 
     })
-    // 5.屏幕滚动
+
+    // 4.屏幕滚动
     Win.scroll(function(){
       Dom.top_nav.hide()
       Dom.bottom_nav.hide()
@@ -116,7 +132,7 @@
       Dom.nav_pannel_bk.hide()
     })
 
-    //6.切换字体和字号，保存信息到localStorage
+    //5.切换字体和字号，保存信息到localStorage,这里需要一个全局变量，时刻对其时刻进行更改
     $('.font_size .large').click(function(){
       log('debug 6,增大字体')
       log('debug 6 ', initFonSize)
@@ -138,10 +154,54 @@
       Utli.StorageSetter('font_size', initFonSize)
     })
 
+    //6. 切换背景，就是一个轮播图
+    var bk_container = w('.background')
+    bk_container.addEventListener('click', function(event){
+      var container_id = event.target.id
+      var id = container_id.slice(-1)
+      // 更改data-active 值
+      bk_container.dataset.active = id
 
+      // 切换背景
+      var click_bk = $(`#${container_id}`).css('background')
+      $('.fiction.content').css('background', click_bk)
+
+      //q切换背景时，给当前背景加小圆圈，并清除之前的小圆圈
+      removeClassAll('bk_container_current')
+      var selector = `#${container_id}`+'>div'
+      log(selector)
+      var div = w(selector)
+      div.classList.add('bk_container_current')
+      // 存储到localStorage 里面
+      Utli.StorageSetter('bk_id', container_id)
+
+
+    })
+
+    //7.切换夜间模式
+    $('#night_day').click(function(){
+      // todo 触发背景切换
+      var container_id = 'bk_container_5'
+      var id = container_id.slice(-1)
+      // 更改data-active 值
+      bk_container.dataset.active = id
+
+      // 切换背景
+      var click_bk = $(`#${container_id}`).css('background')
+      $('.fiction.content').css('background', click_bk)
+
+      //q切换背景时，给当前背景加小圆圈，并清除之前的小圆圈
+      removeClassAll('bk_container_current')
+      var div = w(`#${container_id}  div`)
+      div.classList.add('bk_container_current')
+      // 存储到localStorage 里面
+      Utli.StorageSetter('bk_id', container_id)
+      })
 
   }
 
+
+    //7.切换日间模式
 
   // 5.整个项目的入口
   function main(){

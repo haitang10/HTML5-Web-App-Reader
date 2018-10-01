@@ -1,15 +1,19 @@
-
+html *{
+      max-width: 500px;
+}
   body{
     text-align: left;
     width: 100%;
     overflow-x: hidden;
-    background: #e9dfc7
+
+
   }
   .fiction.content{
     font-size: 14px;
     line-height: 2em;
     color:#555;
     padding: 15px;
+    background: #e9dfc7
   }
   .fiction.content h4{
     font-size: 20px;
@@ -115,7 +119,7 @@
     height:120px;
     width:100%;
     background: #000;
-    opacity: 0.8;
+    opacity: 0.7;
     z-index: 1000;
   }
   .fiction.setting_nav{
@@ -151,11 +155,32 @@
     width: 30px;
     height: 30px;
     border-radius: 15px;
-    background: #fff;
     display: inline-block;
     vertical-align: -14px;
-    /* 行内元素沿基线对齐 */
+        /* 行内元素沿基线对齐 */
   }
+
+  #bk_container_0{
+    background: #e9dfc7;
+  }
+  #bk_container_1{
+    background: #8bc34a;
+  }
+  #bk_container_2{
+      background: #baa4e0;
+  }
+  #bk_container_3{
+      background: #7dcaec;
+
+  }
+  #bk_container_4{
+      background: #ece5a2;
+  }
+  #bk_container_5{
+      background: #000;
+
+  }
+
   .bk_container_current{
     position: absolute;
     top: -2px;

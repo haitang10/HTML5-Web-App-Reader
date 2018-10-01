@@ -48,3 +48,32 @@ DOM 操作 querySelector
   				background: #fff;
   				display: inline-block;
   				vertical-align: -14px;
+2. 出现bug
+        var initFonSize = Utli.StorageGetter('font_size')
+        if(!initFonSize){
+          initFonSize = 14
+        }
+        initFonSize = parseInt(initFonSize)
+        //设置字体大小
+        log('字体大小', Utli.StorageGetter('font_size'))
+        Dom.content_size.css('font-size', initFonSize)
+
+        上述代码用函数封装之后出现bug
+        var initFonSize = Utli.StorageGetter('font_size')
+        var setFont = function() {
+
+          if(!initFonSize){
+            var initFonSize = 14
+          }
+          var initFonSize = parseInt(initFonSize)
+          //设置字体大小
+          log('字体大小', Utli.StorageGetter('font_size'))
+          Dom.content_size.css('font-size', initFonSize)
+        }
+
+        setFont()      
+        出现bug 原因是在已经声明了全局变量initFonSize,所以在函数内部就不要再用var
+        声明变量了，这样容易声明一个局部变量，导致和全局变量冲突，无法对全局变量修改
+        所以全局变量声明一次就可以，因为js有作用域链，函数内部可以访问全局变量
+3. 未解决bug  切换背景时点击不准确，因为把事件绑在了五个背景图的父元素上 ，
+    父元素是一个div容器，不是精确的圆
