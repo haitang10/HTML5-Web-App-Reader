@@ -35,7 +35,7 @@
   var Win = $(window)
   var Doc = $(document)
 
-  // 5.页面初始化时从localStorage中读取字体大小，如果没有设为14,
+  //5.页面初始化时从localStorage中读取字体大小，如果没有设为14,
   //这里需要一个全局变量，并且在点击增大减小按钮时都要修改其值
   var initFonSize = Utli.StorageGetter('font_size')
   if(!initFonSize){
@@ -49,10 +49,9 @@
   // 6.页面初始化时要从localStorage中读取背景颜色信息
   var container_id = Utli.StorageGetter('bk_id')
   var bk_container = w('.background')
-  log(container_id)
   if(container_id){
-    var id = container_id.slice(-1)
-    bk_container.dataset.active = id
+
+    bk_container.dataset.active = container_id.slice(-1)
     var click_bk = $(`#${container_id}`).css('background')
     $('.fiction.content').css('background', click_bk)
 
@@ -63,7 +62,9 @@
     var div = w(selector)
     div.classList.add('bk_container_current')
   }
-    contaienr_id = 'bk_container_0'
+  contaienr_id = 'bk_container_0'
+
+
   //2.实现和阅读器相关的数据交互的方法
   function ReaderModel(){
 
@@ -157,24 +158,26 @@
     //6. 切换背景，就是一个轮播图
     var bk_container = w('.background')
     bk_container.addEventListener('click', function(event){
-      var container_id = event.target.id
-      var id = container_id.slice(-1)
-      // 更改data-active 值
-      bk_container.dataset.active = id
+      if(event.target.id) {
 
-      // 切换背景
-      var click_bk = $(`#${container_id}`).css('background')
-      $('.fiction.content').css('background', click_bk)
+        var container_id = event.target.id
+        var id = container_id.slice(-1)
+        // 更改data-active 值
+        bk_container.dataset.active = id
 
-      //q切换背景时，给当前背景加小圆圈，并清除之前的小圆圈
-      removeClassAll('bk_container_current')
-      var selector = `#${container_id}`+'>div'
-      log(selector)
-      var div = w(selector)
-      div.classList.add('bk_container_current')
-      // 存储到localStorage 里面
-      Utli.StorageSetter('bk_id', container_id)
+        // 切换背景
+        var click_bk = $(`#${container_id}`).css('background')
+        $('.fiction.content').css('background', click_bk)
 
+        //q切换背景时，给当前背景加小圆圈，并清除之前的小圆圈
+        removeClassAll('bk_container_current')
+        var selector = `#${container_id}`+'>div'
+        log(selector)
+        var div = w(selector)
+        div.classList.add('bk_container_current')
+        // 存储到localStorage 里面
+        Utli.StorageSetter('bk_id', container_id)
+      }
 
     })
 
