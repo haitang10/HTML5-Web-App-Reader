@@ -21,11 +21,9 @@
             cache: true,
             callback: 'duokan_fiction_chapter',
             success: function(result){
-                //得到的数据要进行解码
                 var data = $.base64.decode(result);
                 var json = decodeURIComponent(escape(data))
                 callback(data)
-                console.log('data and json',typeof(data),typeof(json),json)
             }
         })
     }
@@ -84,11 +82,11 @@
 
 
   //2.实现和阅读器相关的数据交互的方法
-  //1.先通过ajax得到章节列表信息，2.通过回调函数根据id获得章节内容地址，地址有jsonp字段，值为地址，3.再通过jsonp获得章节内容
+  //先通过ajax得到章节列表信息，再根据id获得章节内容地址，地址有jsonp字段，值为地址，再通过jsonp获得章节内容
   function ReaderModel(){
-      let Chapter_id
+      var Chapter_id
 
-      // 1,，获得章节列表信息,通过ajax，回调函数就是下面的getCurChaptercontent
+      // 获得章节列表信息,通过ajax
       var getFictioInfo = function(callback){
           $.get('data/chapter.json',function(data){
               //todo 获得章节列表信息之后的回调
@@ -96,7 +94,7 @@
               callback &&callback()
           },'json')
       }
-      //2,发送ajax请求获得章节内容地址后，发送jsonp请求获取某个特定章节内容，得到的内容是base64格式需要解码
+      //在获得章节内容地址后，发送jsonp请求获取某个特定章节内容，需要id 构建url来访问,得到的内容是base64格式需要解码
       var getCurChapterContent = function(chapter_id,data,callback){
           $.get('data/data'+chapter_id + '.json',function(data){
               if(data.result == 0){
