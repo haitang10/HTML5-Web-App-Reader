@@ -24,8 +24,8 @@
                 //得到的数据要进行解码
                 var data = $.base64.decode(result);
                 var json = decodeURIComponent(escape(data))
-                callback(data)
-                console.log('data and json',typeof(data),typeof(json),json)
+                callback(json)
+                // console.log('data and json',typeof(data),typeof(json),json)
             }
         })
     }
@@ -52,7 +52,7 @@
   // 设置一些常亮
   var Win = $(window)
   var Doc = $(document)
-
+  var RootContainer = $('#fiction_container')
   //5.页面初始化时从localStorage中读取字体大小，如果没有设为14,//这里需要一个全局变量，并且在点击增大减小按钮时都要修改其值
   var initFonSize = Utli.StorageGetter('font_size')
   if(!initFonSize){
@@ -87,46 +87,64 @@
   //1.先通过ajax得到章节列表信息，2.通过回调函数根据id获得章节内容地址，地址有jsonp字段，值为地址，3.再通过jsonp获得章节内容
   function ReaderModel(){
       let Chapter_id
+      var init = function(UIcallback){
+            getFictionInfo(function(){
+                getCurChapterContent(Chapter_id, function(data){
+                    // todo 得到章节内容数据后渲染页面
+                    UIcallback && UIcallback(data)
+                })
+            })
+        }
 
       // 1,，获得章节列表信息,通过ajax，回调函数就是下面的getCurChaptercontent
-      var getFictioInfo = function(callback){
+      var getFictionInfo = function(callback){
           $.get('data/chapter.json',function(data){
+              console.log('data 10',data)
               //todo 获得章节列表信息之后的回调
               Chapter_id = data.chapters[1].chapter_id
-              callback &&callback()
+              callback &&callback() // 这个callback 就是下面的getCurChaptercontent
           },'json')
       }
+
       //2,发送ajax请求获得章节内容地址后，发送jsonp请求获取某个特定章节内容，得到的内容是base64格式需要解码
-      var getCurChapterContent = function(chapter_id,data,callback){
+      var getCurChapterContent = function(chapter_id,callback){
+
           $.get('data/data'+chapter_id + '.json',function(data){
+                console.log('data 1',data)
               if(data.result == 0){
                   var url = data.jsonp //地址有jsonp字段，值为地址
                   // 通过jsonp请求数据并解码，方法见Utli,得到数据用回调函数处理
+                  // 这里的data是发送请求之后得到的响应数据也就是解码后的json数据
                   Utli.getBSONP(url,function(data){
+                      // log('data 3',data)
+                      // log('data 4',JSON.parse(data))
+                      //回调函数渲染UI结构
                       callback && callback(data)
                   })
               }
           },'json')
       }
-
-      var init = function(){
-          getFictioInfo(function(){
-              getCurChapterContent(Chapter_id, function(){
-                  // todo 得到章节内容数据后渲染页面
-              })
-          })
-      }
-
       return {
-          init: init
-      }
-
-
+            init: init
+        }
   }
 
   //3. todo 渲染基本的UI结构
-  function ReaderBaserFrame(){
-
+  function ReaderBaserFrame(container){
+      function parseChapterData(jsonData){
+          // log('jsondata',jsonData)
+          var jsonObj = JSON.parse(jsonData)
+          log('UI 结构', jsonObj)
+          var html = `<h4>${jsonObj.t}</h4>`
+          for(var i = 0;i < jsonObj.p.length;i++){
+              html = html + `<p>${jsonObj.p[i]}</p>`
+          }
+          return html
+      }
+      //解析完数据插入到container中
+      return function(data){
+          container.html(parseChapterData(data))
+      }
   }
 
   // 4.todo 交互事件绑定
@@ -266,7 +284,11 @@
   function main(){
     EventBind()
     var readerModel = ReaderModel()
-    readerModel.init()
+    var readerUI = ReaderBaserFrame(RootContainer)
+    readerModel.init(function(data){
+
+        readerUI(data)
+    })
 
   }
 

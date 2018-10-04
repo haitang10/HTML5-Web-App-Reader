@@ -42,6 +42,7 @@ DOM 操作 querySelector
 5. 页面初始化时从localStorage中读取字体大小，如果没有设为14,这里需要一个全局变量，并且在点击增大减小按钮时都要修改其值
 6. 页面初始化时要从localStorage中读取背景颜色信息
 2. 实现和阅读器相关的数据交互的方法
+    1. 从
 3. todo 渲染基本的UI结构
 4. todo 交互事件绑定
 	 1. 轻触屏幕唤出边栏，增加结构,如果边栏被隐藏就显示，显示就隐藏两种方式，用zepto 库和原生js 原理一样，就是写法不同而已。
@@ -55,7 +56,7 @@ DOM 操作 querySelector
 注意事项：
 
 1. 行内元素沿基线对齐，所以让图片居中用vertical-align 垂直对齐
- 
+
           .bk_container{
   				position:relative;
   				width: 30px;
@@ -98,6 +99,3 @@ DOM 操作 querySelector
     父元素是一个div容器，不是精确的圆，解决办法
     响应事件时判定点击的是否是五个小圆，如果点击的是圆，则 event.target.id 为真
     if(event.target.id)
-
-
-
