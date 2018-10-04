@@ -201,3 +201,22 @@ nav{
   height: 40%;
   top: 30%;
 }
+/* .fiction.catalog{
+    height: 20px;
+    background: red;
+} */
+#catalog{
+    position: fixed;
+    width: 70%;
+    left:0;
+    z-index: 100002;
+    background: white;
+    opacity: 1;
+    overflow: hidden;
+    color: black;
+
+}
+#catalog p{
+    padding: 5px 10px;
+    border: 1px #8c8c8c solid
+}

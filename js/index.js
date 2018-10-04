@@ -97,6 +97,9 @@
                     // todo 得到章节内容数据后渲染页面
                     UIcallback && UIcallback(data)
                 })
+
+
+
             })
         }
 
@@ -105,7 +108,11 @@
           $.get('data/chapter.json',function(data){
               console.log('data 10',data)
               //todo 获得章节列表信息之后的回调
-              Chapter_id = data.chapters[0].chapter_id
+              Chapter_id = Utli.StorageGetter('last_chapter_id')
+              if(Chapter_id == null){
+                  Chapter_id = data.chapters[1].chapter_id
+              }
+
               Chapter_total = data.chapters.length
               callback &&callback() // 这个callback 就是下面的getCurChaptercontent
           },'json')
@@ -130,14 +137,16 @@
           },'json')
       }
 
-      //3.实现上下翻页
+      //3.实现上下翻页,章节id存储localStorage
       var preChapter = function(UIcallback){
           Chapter_id = parseInt(Chapter_id, 10)
-          if(Chapter_id == 0){
+          if(Chapter_id == 1){
               return
           }
           Chapter_id -= 1
+          log('chapter_id',Chapter_id)
           getCurChapterContent(Chapter_id, UIcallback)
+          Utli.StorageSetter('last_chapter_id', Chapter_id)
       }
       //4.下翻页
       var nextChapter = function(UIcallback){
@@ -146,12 +155,15 @@
               return
           }
            Chapter_id += 1
+           log('chapter_id',Chapter_id)
           getCurChapterContent(Chapter_id, UIcallback)
+          Utli.StorageSetter('last_chapter_id', Chapter_id)
       }
       return {
             init: init,
             preChapter: preChapter,
             nextChapter: nextChapter,
+            
 
         }
   }
@@ -329,7 +341,7 @@
     readerModel = ReaderModel()
     readerUI = ReaderBaserFrame(RootContainer)
     readerModel.init(function(data){
-
+        log('dubug 5', data)
         readerUI(data)
     })
 

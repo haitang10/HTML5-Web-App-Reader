@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="app">
+<html>
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no,minimal-ui">
@@ -9,59 +9,19 @@
 
 	</head>
 	<body>
-		<div class="root" >
+		<div class="root">
+            <nav class="fiction catalog" id="catalog"></nav>
 			<div class="fiction chapter_title"></div>
-			<div class="fiction content">
-				<h4>第六五六章 金泰宇VS小雷</h4>
-				<p>
-							司机其实并不知道金泰宇是干啥的，更不懂刘夏为啥要让他天天跟着自己。
-							但老板能安排这样一个人在自己身边，那一定是有道理的，所以司机听到金泰宇的话愣了一下后，就也没废话的问道：“进前面的那个胡同吗？”
+			<div class="fiction content" id="fiction_container">
 
-					    “对。”金泰宇看了一眼倒车镜后，就一边往副驾驶爬一边说道：“进了小区后，你随便找个单元楼进去，一直往上走，让声控灯全亮起来，但一定别往下看。”
-						</p>
-				<p>
-									司机一听这话就也有点毛了：“真有人跟着啊？”
-
-							    “有，一辆灰色的轿车。”金泰宇轻声回了一句：“别慌，该怎么开就怎么开，车是半路跟上的，他们应该不知道我也在里面。”
-
-							    “好。”司机虽然嘴上应着，但实际上额头已经见汗了。
-
-							    十分钟后，汽车就行驶进了街道右侧的小区。而这时候内M地区的小区情况基本和东北都差不多，楼房虽然看着很新，但普遍院内都没有保安，只有看门的老大爷，并且各个单元门的防盗门基本也没有几个还能锁上的，大部分的全部都是敞开的。
-
-							    司机将汽车熄火关灯后，就有些紧张的推开车门奔着楼栋子内走去，而金泰恩则是躺在副驾驶座椅上，从腰间拿出一把劣质折叠匕首弹开，静静听着外面的动静。</p>
-				<p>
-											    “翁。”
-
-											    一阵马达声音响起，一台灰色轿车停在了小区内，随即大炮的同伴小雷带着鸭舌帽，体态放松的就往刘夏轿车旁边走去，并且不停的观察着司机进去的那个楼栋子。
-
-											    “啪。”
-
-											    金泰宇听到脚步声后，就将右手放在了车内开门锁上，面无表情的继续听着动静。</p>
-				<p>
-					 ……
-
-								    市区某出租房内，小迷糊看着桌上摆着的那五十万欠条，不停的往嘴里灌着小杯白酒。
-
-								    黄玉坐在对面，双手剥着毛豆，突然问了一句：“你看鸡毛呢啊？”
-
-								    “五万我能要，五十万怎么要？”小迷糊叹息着回应道：“这就是死账，要不然人家能给五五分成吗？”
-
-								    黄玉听到这话皱了皱眉头，直接摆手回应道：“那你就不去要呗，欠条明天我就还给宝乐，实在不行你再找个别的事儿干。”
-
-								    小迷糊滋溜又喝了一小杯酒，双眼盯着欠条略显贪婪的说道：“钱是个好东西啊，二十多万啊……我他妈是真想拿啊！”
-
-								    “嘭！”
-
-								    黄玉一听这话，顿时一拍桌子骂道：“去要账你怕出事儿，不去你还想要钱，那你到底要干啥啊？”
-
-								    小迷糊顿时被骂的一愣。</p>
 			</div>
+
 			<nav class="fiction top_nav">
 				<div class="icon_back"></div>
 				<div class="nav_title">返回书架</div>
 			</nav>
 			<nav class="fiction bottom_nav">
-				<div class="catalog">
+				<div class="catalog" id="button_catalog">
 					<div class="icon_catalog"></div>
 					<div class="nav_title">目录</div>
 				</div>
@@ -98,20 +58,24 @@
 					<div class="bk_container" id="bk_container_4">
 						<div ></div>
 					</div>
+					<div class="bk_container" id="bk_container_5">
+						<div ></div>
+					</div>
 				</div>
 			</nav>
-			<nav class="fiction nav-pannel-bk">	</div>
+			<!-- 轻触唤出菜单 -->
+		    <nav class="fiction nav-pannel-bk"></nav>
 			<div class="fiction button">
 				<ul class="button">
-					<li class="pre_button">上一章</li>
-					<li class="next_button">下一章</li>
+					<li class="pre_button" id="pre_button">上一章</li>
+					<li class="next_button" id="next_button">下一章</li>
 				</ul>
 			</div>
-			<!-- 轻触唤出菜单区域 -->
 			<div class="fiction m_artical_action" >
 				<div class="artical_action_mid" id="action_mid"></div>
 			</div>
 		</div>
+
 		<script src="lib/zepto.min.js"></script>
 		<script>
 			window.jQuery = $;
@@ -119,7 +83,7 @@
 		<script src="js/jquery.base64.js"></script>
 		<script src="js/jquery.jsonp.js"></script>
 
-  	<script src="js/taofun1.js" type="text/javascript"></script>
+  	     <script src="js/taofun1.js" type="text/javascript"></script>
 		<script src="js/test.js" type="text/javascript"></script>
 	</body>
 </html>
