@@ -36,7 +36,7 @@ DOM 操作 querySelector
  轻量化 高性能 维护简单 高性能
 原生 js 框架
 
-# 开发过程： #
+# 开发过程：
 
 
 -  页面结构搭建, 主体结构，边栏，导航栏（目录，设置，夜间）
@@ -65,9 +65,9 @@ DOM 操作 querySelector
 	5. 切换背景，就是一个轮播图
 	6. 切换夜间模式
 
-注意事项：
+# 注意事项：
 
-1. 行内元素沿基线对齐，所以让图片居中用vertical-align 垂直对齐
+## 1. 行内元素沿基线对齐，所以让图片居中用vertical-align 垂直对齐
 
           .bk_container{
   				position:relative;
@@ -77,7 +77,7 @@ DOM 操作 querySelector
   				background: #fff;
   				display: inline-block;
   				vertical-align: -14px;
-2. 出现bug
+## 2. 出现bug
 
         var initFonSize = Utli.StorageGetter('font_size')
         if(!initFonSize){
@@ -106,13 +106,13 @@ DOM 操作 querySelector
         声明变量了，这样容易声明一个局部变量，导致和全局变量冲突，无法对全局变量修改
         所以全局变量声明一次就可以，因为js有作用域链，函数内部可以访问全局变量
 
-3. 未解决bug -切换背景时点击不准确，因为把事件绑在了五个背景图的父元素上 ，
+## 3. 未解决bug -切换背景时点击不准确，因为把事件绑在了五个背景图的父元素上 ，
 
 	    父元素是一个div容器，不是精确的圆，解决办法
 	    响应事件时判定点击的是否是五个小圆，如果点击的是圆，则 event.target.id 为真
 	    if(event.target.id)
 
-4. 实现和服务端数据交互，全是异步操作，回调套回调，嵌套层次很深。
+## 4. 实现和服务端数据交互，全是异步操作，回调套回调，嵌套层次很深。
 
 				1.先通过ajax得到章节列表信息，
 			  	2.通过回调函数根据id获得章节内容地址，地址有jsonp字段，值为地址，
@@ -121,7 +121,7 @@ DOM 操作 querySelector
 
 这就导致了一个问题：代码可读性非常差，并且维护性不好。所以就有了一个问题，如何组织js异步代码？
 
-避免嵌套过深：
+## 避免嵌套过深：
 	
 - 事件消息通知
 -  ES6 Promise 
