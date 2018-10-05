@@ -3,6 +3,12 @@
 
 基本功能类似于一些网站的小说页面  
 
+预览地址：
+
+<img src="img/0.jpg"><img src="img/1.jpg"><img src="img/2.jpg">
+
+
+
 技术 localStorage base 64 图片 icon  touch 事件
 
 ## 使用base64 格式的图片制作ICON ##
@@ -121,4 +127,34 @@ DOM 操作 querySelector
 -  ES6 Promise 
 -  generator
 
+在使用了ES6 Promise对象组织了代码后，改写
+	
+      var getFictionInfoPromise = function(){
+          return new Promise(function(resolve, reject){
+                     $.get('data/chapter.json',function(data){
+                        if(data.rsult == 0){
+                            Chapter_id = Utli.StorageGetter('last_chapter_id')
+                            if(Chapter_id == null){
+                                Chapter_id = data.chapters[1].chapter_id
+                            }
+                            Chapter_total = data.chapters.length
+                            resolve()
+                        }
+                        else{
+                            reject()
+                        }
 
+                     },'json')
+
+                })
+       }
+
+调用的时候 
+
+      var init3 = function(UIcallback){
+          getFictionInfoPromise().then(function(data){
+              return getCurChapterContentpPromise()
+          }).then(function(data){
+              UIcallback && UIcallback()
+          })
+      }

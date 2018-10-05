@@ -208,7 +208,9 @@ nav{
 #catalog{
     position: fixed;
     width: 70%;
-    left:0;
+    height: 99%;
+    top:auto;
+    left: 2px;
     z-index: 100002;
     background: white;
     opacity: 1;

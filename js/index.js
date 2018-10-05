@@ -2,8 +2,7 @@
 
 (function(){
       'use strict'
-      //1. 存储and获取数据,又是一个闭包，把变量隐藏起来，只暴露两个方法
-      // StorageGetter and StorageSetter
+      //1. 存储and获取数据,又是一个闭包，把变量隐藏起来，只暴露两个方法// StorageGetter and StorageSetter
       var Utli = (function(){
             // 因为localStorage 是浏览器公用的，为避免导致错误，所以加上html5_Reader 表明是这个demo的数据
             var prefix = 'html5_reader_'
@@ -90,16 +89,16 @@
 
 
   //2.实现和阅读器相关的数据交互的方法，全是异步操作
-  //1.先通过ajax得到章节列表信息，
-  //2.通过回调函数根据id获得章节内容地址，地址有jsonp字段，值为地址，
-  //3.又一个回调函数，再通过jsonp跨域获得章节内容
-  //4. 再一个回调，将得到的内容用于渲染UI结构
+      //1.先通过ajax得到章节列表信息，
+      //2.通过回调函数根据id获得章节内容地址，地址有jsonp字段，值为地址，
+      //3.又一个回调函数，再通过jsonp跨域获得章节内容
+      //4. 再一个回调，将得到的内容用于渲染UI结构
   function ReaderModel(){
       let Chapter_id
       let Chapter_total
       var init = function(UIcallback){
             getFictionInfo(function(){
-                getCurChapterContent(Chapter_id, function(data){
+                getCurChapterContent(function(data){
                     // todo 得到章节内容数据后渲染页面
                     UIcallback && UIcallback(data)
                 })
@@ -158,7 +157,6 @@
 
 
 
-
       // 1,，获得章节列表信息,通过ajax，回调函数就是下面的getCurChaptercontent
       var getFictionInfo = function(callback){
           $.get('data/chapter.json',function(data){
@@ -175,8 +173,8 @@
       }
 
       //2,发送ajax请求获得章节内容地址后，发送jsonp请求获取某个特定章节内容，得到的内容是base64格式需要解码
-      var getCurChapterContent = function(chapter_id,callback){
-          $.get('data/data'+chapter_id + '.json',function(data){
+      var getCurChapterContent = function(callback){
+          $.get('data/data'+Chapter_id + '.json',function(data){
               console.log('data 1',data)
               if(data.result == 0){
                   var url = data.jsonp //地址有jsonp字段，值为地址
@@ -200,7 +198,7 @@
           }
           Chapter_id -= 1
           log('chapter_id',Chapter_id)
-          getCurChapterContent(Chapter_id, UIcallback)
+          getCurChapterContent(UIcallback)
           Utli.StorageSetter('last_chapter_id', Chapter_id)
       }
       //4.下翻页
@@ -211,7 +209,7 @@
           }
            Chapter_id += 1
            log('chapter_id',Chapter_id)
-          getCurChapterContent(Chapter_id, UIcallback)
+          getCurChapterContent(UIcallback)
           Utli.StorageSetter('last_chapter_id', Chapter_id)
       }
 
@@ -279,9 +277,7 @@
 
   // 4.todo 交互事件绑定
   function EventBind(){
-        // 1.轻触屏幕唤出边栏，增加结构,如果边栏被隐藏就显示，显示就隐藏
-            // 两种方式，用zepto 库和原生js 原理一样，就是写法不同而已。
-            //注意jquery库无法添加addEventListener
+        // 1.轻触屏幕唤出边栏，增加结构,如果边栏被隐藏就显示，显示就隐藏,两种方式，用zepto 库和原生js 原理一样，就是写法不同而已。注意jquery库无法添加addEventListener
 
         $('#action_mid').click(function(){
             catalog.hide()
@@ -430,7 +426,7 @@
     EventBind()
     readerModel = ReaderModel()
     readerUI = ReaderBaserFrame(RootContainer)
-    readerModel.init(function(data){
+    readerModel.init3(function(data){
         //log('dubug 5', data)
         readerUI(data)
     })
@@ -445,7 +441,6 @@
   }
 
   main()
-
 
 
 }) ()
