@@ -426,7 +426,7 @@
     EventBind()
     readerModel = ReaderModel()
     readerUI = ReaderBaserFrame(RootContainer)
-    readerModel.init3(function(data){
+    readerModel.init(function(data){
         //log('dubug 5', data)
         readerUI(data)
     })
