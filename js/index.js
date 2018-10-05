@@ -111,7 +111,7 @@
           getFictionInfoPromise().then(function(data){
               return getCurChapterContentpPromise()
           }).then(function(data){
-              UIcallback && UIcallback()
+              UIcallback && UIcallback(data)
           })
       }
       //Promise
