@@ -161,20 +161,8 @@
           Utli.StorageSetter('last_chapter_id', Chapter_id)
       }
 
-      //5.实现点击目录，章节目录信息呈现
-      var getChapterList = function(UIcallback){
-          $.get('data/chapter.json',function(data){
-              console.log('data 10',data)
-              //todo 获得章节列表信息之后的回调
-              Chapter_id = Utli.StorageGetter('last_chapter_id')
-              if(Chapter_id == null){
-                  Chapter_id = data.chapters[0].chapter_id
-              }
 
-              Chapter_total = data.chapters.length
-              UIcallback && UIcallback(data) // 这个callback 就是下面的getCurChaptercontent
-          },'json')
-      }
+
       return {
             init: init,
             preChapter: preChapter,
@@ -282,7 +270,7 @@
           Dom.nav_pannel_bk.hide()
         })
         catalog.scroll(function(){
-            
+
         })
 
         //5.切换字体和字号，保存信息到localStorage,这里需要一个全局变量，时刻对其时刻进行更改
@@ -376,7 +364,6 @@
 
             }
             else {
-
             }
         })
 
@@ -397,13 +384,11 @@
 
     })
     var ReaderListUI = ReaderChapterList(catalog)
-
     readerModel.getChapterList(function(data){
         //todo 渲染章节列表
 
         ReaderListUI(data)
     })
-
   }
 
   main()

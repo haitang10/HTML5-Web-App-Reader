@@ -1,93 +1,99 @@
 // 模仿块级作用域，用匿名函数构建闭包，不影响全局
 
 (function(){
+      'use strict'
+      //1. 存储and获取数据,又是一个闭包，把变量隐藏起来，只暴露两个方法
+      // StorageGetter and StorageSetter
+      var Utli = (function(){
+            // 因为localStorage 是浏览器公用的，为避免导致错误，所以加上html5_Reader 表明是这个demo的数据
+            var prefix = 'html5_reader_'
+            var StorageGetter = function(key) {
+                return localStorage.getItem(prefix + key)
+            }
+            var StorageSetter = function(key, value) {
+                return localStorage.setItem(prefix + key, value)
+            }
 
-  //1. 存储and获取数据,又是一个闭包，把变量隐藏起来，只暴露两个方法
-  // StorageGetter and StorageSetter
-  var Utli = (function(){
-        // 因为localStorage 是浏览器公用的，为避免导致错误，所以加上html5_Reader 表明是这个demo的数据
-        var prefix = 'html5_reader_'
-        var StorageGetter = function(key) {
-            return localStorage.getItem(prefix + key)
-        }
-        var StorageSetter = function(key, value) {
-            return localStorage.setItem(prefix + key, value)
-        }
+            // 通过jsonp请求数据并解码，方法见Utli,得到放数据用回调函数处理
+            var getBSONP = function(url,callback){
+                return $.jsonp({
+                    url: url,
+                    cache: true,
+                    callback: 'duokan_fiction_chapter',
+                    success: function(result){
+                        //得到的数据要进行解码
+                        var data = $.base64.decode(result);
+                        var json = decodeURIComponent(escape(data))
+                        callback(json)
+                        // console.log('data and json',typeof(data),typeof(json),json)
+                    }
+                })
+            }
 
-        // 通过jsonp请求数据并解码，方法见Utli,得到放数据用回调函数处理
-        var getBSONP = function(url,callback){
-            return $.jsonp({
-                url: url,
-                cache: true,
-                callback: 'duokan_fiction_chapter',
-                success: function(result){
-                    //得到的数据要进行解码
-                    var data = $.base64.decode(result);
-                    var json = decodeURIComponent(escape(data))
-                    callback(json)
-                    // console.log('data and json',typeof(data),typeof(json),json)
-                }
-            })
-        }
+            return {
+                getBSONP: getBSONP,
+                StorageGetter: StorageGetter,
+                StorageSetter: StorageSetter
+            }
+      })()
+      var Dom = {
+          top_nav: $('.top_nav'),
+          bottom_nav: $('.bottom_nav'),
+          action_mid: $('.artical_action_mid'),
+          night_day_switch_button: $('#night_day'),
+          setting_nav: $('.setting_nav'),
+          nav_pannel_bk: $('.nav-pannel-bk'),
+          content_size: $('.content')
 
-        return {
-            getBSONP: getBSONP,
-            StorageGetter: StorageGetter,
-            StorageSetter: StorageSetter
-        }
-  })()
-  var Dom = {
-      top_nav: $('.top_nav'),
-      bottom_nav: $('.bottom_nav'),
-      action_mid: $('.artical_action_mid'),
-      night_day_switch_button: $('#night_day'),
-      setting_nav: $('.setting_nav'),
-      nav_pannel_bk: $('.nav-pannel-bk'),
-      content_size: $('.content')
+          // top_nav: w('.top_nav'),
+          // bottom_nav: w('.bottom_nav'),
 
-      // top_nav: w('.top_nav'),
-      // bottom_nav: w('.bottom_nav'),
+      }
+      // 设置一些常亮
+      var readerModel
+      var readerUI
+      var Win = $(window)
+      var Doc = $(document)
+      var RootContainer = $('#fiction_container')
+      var catalog = $('#catalog')
+      var cataButton = $('#button_catalog')
 
-  }
-  // 设置一些常亮
-  var readerModel
-  var readerUI
-  var Win = $(window)
-  var Doc = $(document)
-  var RootContainer = $('#fiction_container')
-  //5.页面初始化时从localStorage中读取字体大小，如果没有设为14,//这里需要一个全局变量，并且在点击增大减小按钮时都要修改其值
-  var initFonSize = Utli.StorageGetter('font_size')
-  if(!initFonSize){
-      initFonSize = 14
-  }
-  initFonSize = parseInt(initFonSize)
-  //设置字体大小
-  log('字体大小', Utli.StorageGetter('font_size'))
-  Dom.content_size.css('font-size', initFonSize)
+      //5.页面初始化时从localStorage中读取字体大小，如果没有设为14,//这里需要一个全局变量，并且在点击增大减小按钮时都要修改其值
+      var initFonSize = Utli.StorageGetter('font_size')
+      if(!initFonSize){
+          initFonSize = 14
+      }
+      initFonSize = parseInt(initFonSize)
+      //设置字体大小
+      log('字体大小', Utli.StorageGetter('font_size'))
+      Dom.content_size.css('font-size', initFonSize)
 
-  // 6.页面初始化时要从localStorage中读取背景颜色信息
-  var container_id = Utli.StorageGetter('bk_id')
-  var bk_container = w('.background')
-  if(container_id){
+      // 6.页面初始化时要从localStorage中读取背景颜色信息
+      var container_id = Utli.StorageGetter('bk_id')
+      var bk_container = w('.background')
+      if(container_id){
 
-        bk_container.dataset.active = container_id.slice(-1)
-        var click_bk = $(`#${container_id}`).css('background')
-        $('.fiction.content').css('background', click_bk)
+            bk_container.dataset.active = container_id.slice(-1)
+            var click_bk = $(`#${container_id}`).css('background')
+            $('.fiction.content').css('background', click_bk)
 
-        //q切换背景时，给当前背景加小圆圈，并清除之前的小圆圈
-        removeClassAll('bk_container_current')
-        var selector = `#${container_id}`+'>div'
-        log(selector)
-        var div = w(selector)
-        div.classList.add('bk_container_current')
-  }
+            //q切换背景时，给当前背景加小圆圈，并清除之前的小圆圈
+            removeClassAll('bk_container_current')
+            var selector = `#${container_id}`+'>div'
+            log(selector)
+            var div = w(selector)
+            div.classList.add('bk_container_current')
+      }
 
-  contaienr_id = 'bk_container_0'
+      container_id = 'bk_container_0'
 
 
 
-  //2.实现和阅读器相关的数据交互的方法
-  //1.先通过ajax得到章节列表信息，2.通过回调函数根据id获得章节内容地址，地址有jsonp字段，值为地址，3.再通过jsonp获得章节内容
+  //2.实现和阅读器相关的数据交互的方法，全是异步操作
+  //1.先通过ajax得到章节列表信息，
+  //2.通过回调函数根据id获得章节内容地址，地址有jsonp字段，值为地址，
+  //3.又一个回调函数，再通过jsonp跨域获得章节内容
+  //4. 再一个回调，将得到的内容用于渲染UI结构
   function ReaderModel(){
       let Chapter_id
       let Chapter_total
@@ -98,10 +104,60 @@
                     UIcallback && UIcallback(data)
                 })
 
-
-
             })
         }
+
+      //Promise
+      var init3 = function(UIcallback){
+          getFictionInfoPromise().then(function(data){
+              return getCurChapterContentpPromise()
+          }).then(function(data){
+              UIcallback && UIcallback()
+          })
+      }
+      //Promise
+      //使用promise组织异步代码,Promise对象有两个参数，resolve和reject函数，分别用于处理
+      //成功和失败后的情况
+      var getFictionInfoPromise = function(){
+          return new Promise(function(resolve, reject){
+                     $.get('data/chapter.json',function(data){
+                        if(data.rsult == 0){
+                            Chapter_id = Utli.StorageGetter('last_chapter_id')
+                            if(Chapter_id == null){
+                                Chapter_id = data.chapters[1].chapter_id
+                            }
+                            Chapter_total = data.chapters.length
+                            resolve()
+                        }
+                        else{
+                            reject()
+                        }
+
+                     },'json')
+
+                })
+      }
+
+      var getCurChapterContentpPromise = function(){
+          return new Promise(function(resolve, reject){
+                     $.get('data/data'+Chapter_id + '.json',function(data){
+                          if(data.result == 0){
+                              var url = data.jsonp //地址有jsonp字段，值为地址
+                              Utli.getBSONP(url,function(data){
+                                  resolve(data)
+                              })
+                          }
+                          else{
+                              reject({msg: 'error'})
+                          }
+                      },'json')
+                  })
+      }
+
+
+
+
+
 
       // 1,，获得章节列表信息,通过ajax，回调函数就是下面的getCurChaptercontent
       var getFictionInfo = function(callback){
@@ -120,9 +176,8 @@
 
       //2,发送ajax请求获得章节内容地址后，发送jsonp请求获取某个特定章节内容，得到的内容是base64格式需要解码
       var getCurChapterContent = function(chapter_id,callback){
-
           $.get('data/data'+chapter_id + '.json',function(data){
-                console.log('data 1',data)
+              console.log('data 1',data)
               if(data.result == 0){
                   var url = data.jsonp //地址有jsonp字段，值为地址
                   // 通过jsonp请求数据并解码，方法见Utli,得到数据用回调函数处理
@@ -159,11 +214,27 @@
           getCurChapterContent(Chapter_id, UIcallback)
           Utli.StorageSetter('last_chapter_id', Chapter_id)
       }
+
+       //5.实现点击目录，章节目录信息呈现
+      var getChapterList = function(UIcallback){
+          $.get('data/chapter.json',function(data){
+              console.log('data 10',data)
+              //todo 获得章节列表信息之后的回调
+              Chapter_id = Utli.StorageGetter('last_chapter_id')
+              if(Chapter_id == null){
+                  Chapter_id = data.chapters[0].chapter_id
+              }
+
+              Chapter_total = data.chapters.length
+              UIcallback && UIcallback(data) // 这个callback 就是下面的getCurChaptercontent
+          },'json')
+      }
       return {
             init: init,
             preChapter: preChapter,
             nextChapter: nextChapter,
-            
+            init3: init3,
+            getChapterList: getChapterList,
 
         }
   }
@@ -185,27 +256,35 @@
           container.html(parseChapterData(data))
       }
   }
+  // 渲染目录结构
+  function ReaderChapterList(container){
+      function parseChapterData(jsonData){
+          log('debug 目录列表 jsonData',typeof(jsonData),jsonData)
+          var jsonObj = jsonData.chapters
+          log('debug 目录列表 jsonObj', jsonObj)
+          var html = ''
+          for(var i = 0; i < jsonObj.length; i++){
+              var html = html + `<p>${jsonObj[i].title}</p>`
+
+          }
+          // log('html',html)
+          return html
+
+      }
+      //解析完数据插入到container中
+      return function(data){
+          container.html(parseChapterData(data))
+      }
+  }
 
   // 4.todo 交互事件绑定
   function EventBind(){
         // 1.轻触屏幕唤出边栏，增加结构,如果边栏被隐藏就显示，显示就隐藏
             // 两种方式，用zepto 库和原生js 原理一样，就是写法不同而已。
             //注意jquery库无法添加addEventListener
-            // var touchMid = function() {
-            //   log('debug 1, 轻触屏幕中央唤出边栏')
-            //   w('#action_mid').addEventListener('click', function(){
-            //     if(Dom.top_nav.css('display') == 'none'){
-            //       Dom.top_nav.show()
-            //       Dom.bottom_nav.show()
-            //     }
-            //     else {
-            //       Dom.top_nav.hide()
-            //       Dom.bottom_nav.hide()
-            //     }
-            //   })
-            // }
-            // touchMid()
+
         $('#action_mid').click(function(){
+            catalog.hide()
             console.log('debug1 轻触屏幕中央唤出边栏')
             if(Dom.top_nav.css('display') == 'none'){
               Dom.top_nav.show()
@@ -329,6 +408,17 @@
 
         })
 
+        //9. 点击目录唤出目录
+        $('#button_catalog').click(function(){
+            console.log('debug 1000')
+            if(catalog.css('display') == 'none'){
+              catalog.show()
+
+            }
+            else {
+            }
+        })
+
 
 
   }
@@ -341,8 +431,15 @@
     readerModel = ReaderModel()
     readerUI = ReaderBaserFrame(RootContainer)
     readerModel.init(function(data){
-        log('dubug 5', data)
+        //log('dubug 5', data)
         readerUI(data)
+    })
+
+    var ReaderListUI = ReaderChapterList(catalog)
+    readerModel.getChapterList(function(data){
+        //todo 渲染章节列表
+
+        ReaderListUI(data)
     })
 
   }
