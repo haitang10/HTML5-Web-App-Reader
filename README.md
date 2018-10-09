@@ -3,7 +3,7 @@
 
 基本功能类似于一些网站的小说页面  
 
-预览地址：
+预览地址：[http://haitang10.top/HTML5-Web-App-Reader/](http://haitang10.top/HTML5-Web-App-Reader/)
 
 <img src="img/0.jpg"><img src="img/1.jpg"><img src="img/2.JPG">
 
